@@ -79,7 +79,7 @@ function importujKupony($csvFilePath) {
     
                 // Konwertuj format daty na 'YYYY-MM-DD'
                 $expiry_date = isset($line[3]) ? date('Y-m-d', strtotime($line[3])) : '';
-        
+                $usage_limit = isset($line[4]) ? $line[4] : '';
         // Sprawdź, czy kupon o danym kodzie już istnieje
         $existing_coupon_id = $wpdb->get_var(
             $wpdb->prepare(
@@ -105,18 +105,18 @@ function importujKupony($csvFilePath) {
             update_post_meta($coupon_id, 'individual_use', 'yes');
             update_post_meta($coupon_id, 'product_ids', '');
             update_post_meta($coupon_id, 'exclude_product_ids', '');
-            update_post_meta($coupon_id, 'usage_limit', '');
+            update_post_meta($coupon_id, 'usage_limit', $usage_limit);
             update_post_meta($coupon_id, 'expiry_date', $expiry_date);
 
             echo '<div id="message" class="updated notice notice-success is-dismissible">
-                        <p>Kupon o kodzie '.$coupon_code.' został zaimportowany.</p>
+                        <p>Kupon o kodzie "<strong>'.$coupon_code.'"</strong> został zaimportowany.</p>
                         <button type="button" class="notice-dismiss"><span class="screen-reader-text">Ukryj komunikat.</span></button>
                     </div>';
 
         } else {
             // Kupon już istnieje, pomijamy
             echo '<div id="message" class="notice notice-error is-dismissible">
-                        <p>Kupon o kodzie '.$coupon_code.' już istnieje i został pominięty.</p>
+                        <p>Kupon o kodzie "<strong>'.$coupon_code.'</strong>" już istnieje i został pominięty.</p>
                         <button type="button" class="notice-dismiss"><span class="screen-reader-text">Ukryj komunikat.</span></button>
                     </div>';
 
